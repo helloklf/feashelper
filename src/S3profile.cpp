@@ -26,7 +26,7 @@ static unsigned int Countline(const char *location)
 static bool readProfile(const char *Profilelocation, std::string *&p, bool &performance_governor)
 {
     std::ifstream cfgFile(Profilelocation);
-    if (!Profilelocation)
+    if (!cfgFile)
         return false;
     unsigned int i = 0;
     while (!cfgFile.eof())
