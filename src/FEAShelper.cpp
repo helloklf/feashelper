@@ -39,7 +39,7 @@ int startServer() {
 		return ENODEV;
 	}
 	LOGI("Device is supported.");
-	LOGI("Device category: %s", device.getType().c_str());
+	LOGI("Device category: %s", device.getTypeCStr());
 
 	// start Topappmonitor
 	device.startTopappmonitor(3);
@@ -54,7 +54,7 @@ int startServer() {
 			// addutils(device.getToppkg());
 
 			// set governor
-			if (profile.performance_governor && device.getType() != "old_qcom") {
+			if (profile.performance_governor && device.getType() != TYPE_QCOM_OLD) {
 				setGov("performance");
 			}
 		} else {

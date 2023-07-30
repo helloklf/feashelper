@@ -2,10 +2,18 @@
 
 #include "Androidutils.h"
 
+enum DEVICE_TYPE_ID {
+	TYPE_UNKNOWN = 0,
+	TYPE_BOCCHI,
+	TYPE_QCOM,
+	TYPE_MTK,
+	TYPE_QCOM_OLD,
+};
+
 // Feas Android device
 class AndroidDeviceFEAS : public AndroidDevice {
-		bool isFEASSupported;
-		std::string type;
+		bool isFEASSupported = false;
+		int type = TYPE_UNKNOWN;
 	public:
 		AndroidDeviceFEAS();
 
@@ -23,9 +31,11 @@ class AndroidDeviceFEAS : public AndroidDevice {
 
 		bool FEASon(unsigned int &fps);
 
-		bool FEASoff();
+		bool FEASoff() const;
 
 		bool HasFEAS() const;
 
-		std::string getType() const;
+		int getType() const;
+
+		const char *getTypeCStr() const;
 };
