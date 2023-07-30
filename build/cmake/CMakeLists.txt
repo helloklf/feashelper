@@ -70,9 +70,13 @@ add_compile_options("$<$<COMPILE_LANGUAGE:C>:${GLOBAL_CFLAGS}>" "$<$<COMPILE_LAN
 add_link_options("$<$<LINK_LANGUAGE:C>:${GLOBAL_LDFLAGS}>" "$<$<LINK_LANGUAGE:CXX>:${GLOBAL_LDFLAGS}>")
 
 set(SRC_DIR "${PROJECT_SOURCE_DIR}/../../src")
+set(LIB_DIR "${PROJECT_SOURCE_DIR}/../../lib")
 
 include(headers.cmake)
 include(libcxx.cmake)
+include(libbase.cmake)
+include(libcutils.cmake)
+include(liblog.cmake)
 
 ###############################------FEAShelper------###############################
 set(TARGET_FEASHelper FEASHelper)
@@ -81,6 +85,12 @@ file(GLOB FEASHelper_srcs "${TARGET_SRC_DIR}/*.cpp")
 add_executable(${TARGET_FEASHelper} ${FEASHelper_srcs})
 target_include_directories(${TARGET_FEASHelper} PRIVATE
     ${common_headers}
+    ${libbase_headers}
+    ${liblog_headers}
+    ${libcutis_headers}
 )
-target_link_libraries(${TARGET_FEAShelper} cxx)
+target_link_libraries(${TARGET_FEASHelper}
+    base
+    log
+)
 

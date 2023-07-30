@@ -1,6 +1,6 @@
 set(TARGET cxx)
 
-set(TARGET_SRC_DIR "${SRC_DIR}/libcxx")
+set(TARGET_SRC_DIR "${LIB_DIR}/libcxx")
 
 set(LIBCXX_SOURCES
     algorithm.cpp

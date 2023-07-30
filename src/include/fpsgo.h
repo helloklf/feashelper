@@ -1,3 +1,5 @@
+#pragma once
+
 #include <sys/ioctl.h>
 
 #define FPSGO_QUEUE                  _IOW('g', 1,  struct _FPSGO_PACKAGE)

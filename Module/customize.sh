@@ -30,19 +30,19 @@ MODS_PATH="/data/adb/modules"
 rm $MODPATH/feas.conf
 
 # permission
-chmod a+x $MODPATH/FEAShelper
+chmod a+x $MODPATH/FEASHelper
 
 # start FEAShelper on install
-killall FEAShelper 2>&1 > /dev/null
+killall FEASHelper 2>&1 > /dev/null
 echo "----------------------------------------------------"
-$MODPATH/FEAShelper /data/feas.conf &
+$MODPATH/FEASHelper -c /data/feas.conf
 sleep 1s
 
-# test if FEAShelper started
-if [[ "$(pgrep FEAShelper)" == "" ]]; then
+# test if FEASHelper started
+if [[ "$(pgrep FEASHelper)" == "" ]]; then
     echo "Sorry, unsupported device."
     echo "不支持的设备"
     abort
 fi
-echo "FEAShelper is running……"
-echo "FEAShelper已运行……"
+echo "FEASHelper is running……"
+echo "FEASHelper已运行……"

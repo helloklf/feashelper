@@ -1,12 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
-#include <string>
+#include <cstring>
 #include <fcntl.h>
 #include <unistd.h>
 
-#include "include/fpsgo.h"
+#include "fpsgo.h"
+#include "Logging.h"
 
 using namespace std;
 
@@ -30,41 +27,41 @@ int fpsgo_ioctl(unsigned long fpsgo_ioctl, uint32_t tid, uint32_t start, uint64_
 	// fc.start =
 	// fc.connectedAPI =
 	// fc.identifier =
-	
+
 	memset(&fpsgoPkg, 0, sizeof(_FPSGO_PACKAGE));
 
-	switch (fpsgo_ioctl){
+	switch (fpsgo_ioctl) {
 		case 1:  //connect
 			fpsgoPkg.tid = tid;
 			fpsgoPkg.connectedAPI = connectedAPI;
 			fpsgoPkg.identifier = identifier;
 			ioctl_cmd = FPSGO_QUEUE_CONNECT;
-			printf("skkk: fpsgo connect arg, cmd=%lu tid=%u api=%u id=%llu\n",
-				ioctl_cmd, fpsgoPkg.tid, fpsgoPkg.connectedAPI, fpsgoPkg.identifier);
+			LOGI("fpsgo connect arg, cmd=%lu tid=%u api=%u id=%llu\n",
+				 ioctl_cmd, fpsgoPkg.tid, fpsgoPkg.connectedAPI, fpsgoPkg.identifier);
 			break;
 		case 2: // add queue
 			fpsgoPkg.tid = tid;
 			fpsgoPkg.start = start;
 			fpsgoPkg.identifier = identifier;
-			ioctl_cmd  = FPSGO_QUEUE;
-			printf("skkk: fpsgo add queue arg, cmd=%lu start=%u tid=%u id=%llu\n",
-				ioctl_cmd, fpsgoPkg.start, fpsgoPkg.tid, fpsgoPkg.identifier);
+			ioctl_cmd = FPSGO_QUEUE;
+			LOGI("fpsgo add queue arg, cmd=%lu start=%u tid=%u id=%llu\n",
+				 ioctl_cmd, fpsgoPkg.start, fpsgoPkg.tid, fpsgoPkg.identifier);
 			break;
 		case 3: // delete queue
 			fpsgoPkg.tid = tid;
 			fpsgoPkg.start = start;
 			fpsgoPkg.identifier = identifier;
 			ioctl_cmd = FPSGO_DEQUEUE;
-			printf("skkk: fpsgo delete queue arg, cmd=%lu start=%u tid=%u id=%llu\n",
-				ioctl_cmd, fpsgoPkg.start, fpsgoPkg.tid, fpsgoPkg.identifier);
+			LOGI("fpsgo delete queue arg, cmd=%lu start=%u tid=%u id=%llu\n",
+				 ioctl_cmd, fpsgoPkg.start, fpsgoPkg.tid, fpsgoPkg.identifier);
 			break;
 		case 4:
 			ioctl_cmd_ret = true;
 			ioctl_cmd = FPSGO_GET_FPS;
-			printf("skkk: FPSGO_GET_FPS, cmd=%lu", ioctl_cmd);
+			LOGI("FPSGO_GET_FPS, cmd=%lu", ioctl_cmd);
 			break;
 		default:
-			printf("skkk: arg error!\n");
+			LOGI("fpsg oarg error!\n");
 			ret = 1;
 			goto exit;
 	}
@@ -76,22 +73,22 @@ int fpsgo_ioctl(unsigned long fpsgo_ioctl, uint32_t tid, uint32_t start, uint64_
 		ret = 2;
 		goto exit;
 	}
-	printf("skkk: exec ioctl...\n");
+	LOGI("fpsg exec ioctl...\n");
 	ret = ioctl(fd, ioctl_cmd, &fpsgoPkg);
 	if (ret < 0) {
 		//printf("skkk: ioctl failed.\n");
 		ret = 3;
 		goto exit;
 	}
-	
+
 	if (ioctl_cmd_ret) {
-		switch(fpsgo_ioctl) {
+		switch (fpsgo_ioctl) {
 			case 4:
-				printf("skkk: fpsgo_ret tid=%u fps=%u", fpsgoPkg.tid, fpsgoPkg.value1);
+				LOGI("fpsgo_ret tid=%u fps=%u", fpsgoPkg.tid, fpsgoPkg.value1);
 				break;
 		}
 	}
-	
+
 exit:
 	if (fd > 0) close(fd);
 	//printf("skkk: ioctl ret=%d\n", ret);

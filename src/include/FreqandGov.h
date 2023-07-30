@@ -3,6 +3,9 @@
 #include "Androidutils_feas.h"
 
 std::string getGov();
-void restore(AndroidDeviceFEAS &device);
-void setGov(std::string governor);
-void setGov_normal(AndroidDeviceFEAS &device);
+
+void restore(const AndroidDeviceFEAS &device);
+
+void setGov(const std::string &governor);
+
+void setGov_normal(const AndroidDeviceFEAS &device);

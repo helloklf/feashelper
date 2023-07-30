@@ -1,3 +1,12 @@
-[submodule "src/libcxx"]
-	path = src/libcxx
+[submodule "lib/libcxx"]
+	path = lib/libcxx
 	url = https://github.com/LSPosed/libcxx
+[submodule "lib/core"]
+	path = lib/core
+	url = https://android.googlesource.com/platform/system/core.git
+[submodule "lib/libbase"]
+	path = lib/libbase
+	url = https://android.googlesource.com/platform/system/libbase
+[submodule "lib/logging"]
+	path = lib/logging
+	url = https://android.googlesource.com/platform/system/logging.git
