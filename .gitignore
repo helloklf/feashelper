@@ -26,7 +26,7 @@ Module/*.zip
 # information for Eclipse / Flash Builder.
 
 # lib
-lib
+lib/
 
 # temp
 .idea/

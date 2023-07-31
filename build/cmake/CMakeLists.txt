@@ -25,6 +25,7 @@ set(GLOBAL_CFLAGS
     "-fvisibility-inlines-hidden"
     "-funwind-tables"
     "-fstack-protector-strong"
+    "-Wno-unused-result"
     "-fno-exceptions"
     "-fno-rtti"
     "-nostdinc++"
@@ -41,10 +42,13 @@ set(GLOBAL_LDFLAGS
 )
 set(GLOBAL_LDFLAGS_RELEASE)
 
-if (CMAKE_SYSTEM_NAME MATCHES "Android")
+if (CMAKE_SYSTEM_NAME MATCHES "Linux|Android")
     list(APPEND GLOBAL_LDFLAGS "-Wl,--no-undefined" "-static")
-    list(APPEND GLOBAL_CFLAGS "-DANDROID" "-mllvm" "-polly")
-    list(APPEND GLOBAL_LDFLAGS_RELEASE "-Wl,--gc-sections,-icf=all,-s,-x,--lto-O3")
+    list(APPEND GLOBAL_LDFLAGS_RELEASE "-Wl,--gc-sections,-s,-x")
+    if (CMAKE_SYSTEM_NAME MATCHES "Android")
+        list(APPEND GLOBAL_CFLAGS "-DANDROID" "-mllvm" "-polly")
+        list(APPEND GLOBAL_LDFLAGS_RELEASE "-Wl,-icf=all,--lto-O3")
+    endif ()
 endif ()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -53,7 +57,9 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
     if (ENABLE_FULL_LTO)
         list(APPEND GLOBAL_CFLAGS "-flto=full")
         list(APPEND GLOBAL_LDFLAGS "-fuse-ld=lld")
-        list(APPEND GLOBAL_LDFLAGS "-T${CMAKE_CURRENT_SOURCE_DIR}/lto_fix.lds")
+        if (CMAKE_SYSTEM_NAME MATCHES "Android")
+            list(APPEND GLOBAL_LDFLAGS "-T${CMAKE_CURRENT_SOURCE_DIR}/lto_fix.lds")
+        endif ()
     endif ()
     add_definitions("-DNDEBUG")
 elseif (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -72,25 +78,10 @@ add_link_options("$<$<LINK_LANGUAGE:C>:${GLOBAL_LDFLAGS}>" "$<$<LINK_LANGUAGE:CX
 set(SRC_DIR "${PROJECT_SOURCE_DIR}/../../src")
 set(LIB_DIR "${PROJECT_SOURCE_DIR}/../../lib")
 
-include(headers.cmake)
-include(libcxx.cmake)
-include(libbase.cmake)
-include(libcutils.cmake)
-include(liblog.cmake)
+# Git clone submodule
+execute_process(COMMAND git submodule init)
+execute_process(COMMAND git submodule update)
 
-###############################------FEAShelper------###############################
-set(TARGET_FEASHelper FEASHelper)
-set(TARGET_SRC_DIR "${SRC_DIR}")
-file(GLOB FEASHelper_srcs "${TARGET_SRC_DIR}/*.cpp")
-add_executable(${TARGET_FEASHelper} ${FEASHelper_srcs})
-target_include_directories(${TARGET_FEASHelper} PRIVATE
-    ${common_headers}
-    ${libbase_headers}
-    ${liblog_headers}
-    ${libcutis_headers}
-)
-target_link_libraries(${TARGET_FEASHelper}
-    base
-    log
-)
-
+# Start building
+add_subdirectory(lib)
+add_subdirectory(FEASHelper)
